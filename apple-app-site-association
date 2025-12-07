@@ -1,0 +1,16 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "Y5RJ8VL979.test.PSD2TestingApplication",
+        "paths": [
+          "/openbankingPSD2/callback.html*",
+          "/openbankingPSD2/callback*",
+          "/dummyWebPage/callback.html*",
+          "/dummyWebPage/callback*"
+        ]
+      }
+    ]
+  }
+}
