@@ -19,7 +19,8 @@
             background: white;
             border-radius: 16px;
             padding: 40px;
-            max-width: 400px;
+            max-width: 500px;
+            width: 100%;
             text-align: center;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
@@ -45,40 +46,86 @@
         }
         h1 { color: #333; font-size: 24px; margin-bottom: 10px; }
         p { color: #666; font-size: 16px; margin-bottom: 20px; }
-        .code { 
-            background: #f0f0f0;
-            padding: 10px;
+        .code-container { 
+            background: #f8f9fa;
+            padding: 15px;
             border-radius: 8px;
-            font-family: monospace;
-            word-break: break-all;
             margin: 20px 0;
+            border: 2px solid #e9ecef;
+        }
+        .code-label {
+            color: #6c757d;
             font-size: 12px;
-            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .code { 
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            font-size: 13px;
+            color: #212529;
+            border: 1px solid #dee2e6;
+            line-height: 1.6;
         }
         .status {
-            background: #f0f4ff;
+            background: #d1f4e0;
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
+            border: 1px solid #9ae6b4;
         }
         .status-text {
-            color: #667eea;
+            color: #22543d;
             font-weight: 600;
             font-size: 14px;
         }
-        a {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            padding: 14px 30px;
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 24px;
             border-radius: 8px;
             font-weight: 600;
-            margin-top: 20px;
-            transition: transform 0.2s;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        a:hover {
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .btn-secondary:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+        .btn-secondary.copied {
+            background: #d1f4e0;
+            color: #22543d;
+            border-color: #9ae6b4;
         }
         .footer {
             margin-top: 30px;
@@ -87,19 +134,12 @@
             color: #999;
             font-size: 12px;
         }
-        .return-button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: transform 0.2s;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .return-button:hover {
-            transform: translateY(-2px);
+        .container > * {
+            animation: fadeIn 0.5s ease-out;
         }
     </style>
 </head>
@@ -118,9 +158,27 @@
             <div class="status-text" id="status">✓ Code delivered to PSD2 Banking App</div>
         </div>
         
-        <div class="code" id="code-display"></div>
+        <div class="code-container">
+            <div class="code-label">Authorization Code:</div>
+            <div class="code" id="code-display"></div>
+        </div>
         
-        <a href="#" id="return-button" class="return-button">Return to PSD2 Banking App</a>
+        <div class="button-group">
+            <button class="btn btn-secondary" id="copy-button">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copy-text">Copy Code</span>
+            </button>
+            <a href="#" id="return-button" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Return to App
+            </a>
+        </div>
         
         <p style="margin-top: 30px; color: #999; font-size: 14px;">You can close this page and return to the app.</p>
         
@@ -136,9 +194,8 @@
         
         console.log('🔗 Callback page received code:', code);
         
-        // Display code (truncated for security)
-        const truncated = code.length > 16 ? code.substring(0, 8) + '...' + code.substring(code.length - 4) : code;
-        document.getElementById('code-display').textContent = `Authorization Code: ${truncated}`;
+        // Display full code
+        document.getElementById('code-display').textContent = code;
         
         // Save code to sessionStorage so the app can retrieve it if needed
         if (code !== 'no-code' && code) {
@@ -149,11 +206,51 @@
         // Update status based on code presence
         if (code === 'no-code' || !code) {
             document.getElementById('status').textContent = '⚠ No authorization code provided';
-            document.getElementById('status').style.color = '#dc3545';
+            document.querySelector('.status').style.background = '#fed7d7';
+            document.querySelector('.status').style.borderColor = '#fc8181';
+            document.querySelector('.status-text').style.color = '#742a2a';
         } else {
             document.getElementById('status').textContent = '✓ Code delivered to PSD2 Banking App';
-            document.getElementById('status').style.color = '#28a745';
         }
+        
+        // Copy button functionality
+        const copyButton = document.getElementById('copy-button');
+        const copyText = document.getElementById('copy-text');
+        
+        copyButton.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(code);
+                copyButton.classList.add('copied');
+                copyText.textContent = 'Copied!';
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    copyButton.classList.remove('copied');
+                    copyText.textContent = 'Copy Code';
+                }, 2000);
+                
+                console.log('✅ Code copied to clipboard');
+            } catch (err) {
+                console.error('❌ Failed to copy code:', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    copyButton.classList.add('copied');
+                    copyText.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyButton.classList.remove('copied');
+                        copyText.textContent = 'Copy Code';
+                    }, 2000);
+                } catch (err2) {
+                    alert('Failed to copy code');
+                }
+                document.body.removeChild(textArea);
+            }
+        });
         
         // Set up return button to trigger app opening
         const returnButton = document.getElementById('return-button');
@@ -173,7 +270,7 @@
             }, 2000);
         });
         
-        console.log('✅ Callback page loaded. Code is ready. User should tap "Return to App" button.');
+        console.log('✅ Callback page loaded. Full code is displayed. User can copy or return to app.');
     </script>
 </body>
 </html>
